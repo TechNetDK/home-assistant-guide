@@ -9,17 +9,16 @@
 > Uden krypteringsnøglen kan backuppen **ikke** gendannes. Gem den, før du har brug for den.
 
 ## 2. Backup af hele containeren i Proxmox
-Tag container 101 med i Proxmox' egen backup (se kapitel 07 i Proxmox-guiden).
-Al opsætning ligger i `/opt/homeassistant` inde i containeren, så den kommer med
-(i modsætning til medieserverens `/mnt/media`, som er et bind-mount).
+Tag container 102 med i Proxmox' egen backup (se kapitel 07 i Proxmox-guiden).
+Al opsætning ligger i `/opt/homeassistant` inde i containeren, så den kommer med.
 Kopier backupperne til en anden disk – eller ud af huset.
 
 ## 3. Opdatering
-> Snapshot i Proxmox virker ikke her, fordi containeren har medieserverens bind-mount.
-
 1. Læs udgivelsesnoterne for **breaking changes**.
-2. Lav en backup lige før: **Indstillinger → System → Sikkerhedskopiering → Sikkerhedskopiér nu**.
-   Skriv den version ned, du kører nu (**Indstillinger → Om**).
+2. Tag et snapshot på Proxmox-værten:
+   ```bash
+   pct snapshot 102 foer-opdatering
+   ```
 3. Opdater inde i containeren:
    ```bash
    cd /opt/homeassistant
@@ -27,9 +26,10 @@ Kopier backupperne til en anden disk – eller ud af huset.
    docker compose up -d
    docker image prune -f
    ```
-4. Gik det galt, så sæt den gamle version ind i compose-filen, fx
-   `image: ghcr.io/home-assistant/home-assistant:<gammel version>`, og kør `docker compose up -d`.
-   Virker det stadig ikke, så gendan backuppen fra trin 2.
+4. Virker alt, så slet snapshottet igen: `pct delsnapshot 102 foer-opdatering`.
+   Gik det galt: `pct rollback 102 foer-opdatering`.
+
+Gem ikke snapshots i lang tid – de fylder mere og mere.
 
 > Vil du selv bestemme, hvornår der opdateres, så lås versionen i compose-filen,
 > fx `image: ghcr.io/home-assistant/home-assistant:<version>`.
