@@ -36,7 +36,7 @@ docker compose logs -f homeassistant    # Ctrl+C for at stoppe visningen
 ```
 
 ## 3. Første opsætning
-Åbn `http://10.0.0.13:8123` i browseren, og følg guiden:
+Åbn `http://10.0.0.14:8123` i browseren, og følg guiden:
 - Lav en **admin-bruger** med en stærk adgangskode.
 - Vælg hjemmets placering, tidszone (`Europe/Copenhagen`), enhedssystem (metrisk) og valuta (DKK).
 - Home Assistant finder selv mange enheder på netværket. Tilføj dem, du vil bruge.
